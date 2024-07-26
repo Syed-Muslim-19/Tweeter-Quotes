@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <title>Quotes Generator</title>
+  </head>
+  <style>
+    body {
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f8ff;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 255, 255, 0.29);
+      width: 100%;
+      height: 100%;
+    }
+    .inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .box {
+      background-color: aliceblue;
+      width: max-content;
+      padding: 20px;
+      box-shadow: 1px 1px 30px rgba(0, 0, 0, 0.187);
+    }
+    .number {
+      background-color: white;
+      width: max-content;
+      padding: 7px;
+      border-radius: 20px;
+      margin-top: 25px;
+      margin-bottom: 50px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="inner">
+        <div class="box">
+          <div class="text" style="margin-top: 20px">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="quotes"></p>
+            <div style="text-align: right">
+              <i class="fa-solid fa-quote-right"></i>
+            </div>
+            <div style="text-align: right">
+              <p class="author"></p>
+            </div>
+            <center>
+              <p class="number">
+                Post me
+                <i
+                  class="fa-brands fa-twitter tweetMe"
+                  style="color: lightblue; cursor: pointer"
+                ></i>
+              </p>
+            </center>
+          </div>
+          <label class="button">
+            <p class="btn" style="cursor: pointer"><u> New Quotes</u></p>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const quotes = document.getElementsByClassName("quotes")[0];
+      const author = document.getElementsByClassName("author")[0];
+      const newQ = document.getElementsByClassName("btn")[0];
+      const tweetMe = document.getElementsByClassName("tweetMe")[0];
+      let realData = "";
+      let rnum = 0;
+
+      const getNewQuotes = () => {
+        rnum = Math.floor(Math.random() * realData.length);
+        quotes.innerText = `${realData[rnum].text}`;
+        if (realData[rnum].author) {
+          let index = Math.max(0, realData[rnum].author.length - 10);
+          author.innerText = `${realData[rnum].author.substring(0, index)}`;
+        } else {
+          author.innerText = "Unknown";
+        }
+      };
+
+      const tweetNow = () => {
+        let tweetPost = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          realData[rnum].text
+        )}`;
+        window.open(tweetPost);
+      };
+
+      const getQuotes = async () => {
+        const API = "https://type.fit/api/quotes";
+        try {
+          let data = await fetch(API);
+          realData = await data.json();
+          getNewQuotes();
+        } catch (error) {
+          console.error("Error fetching quotes:", error);
+        }
+      };
+
+      newQ.addEventListener("click", getNewQuotes);
+      tweetMe.addEventListener("click", tweetNow);
+
+      getQuotes();
+    </script>
+  </body>
+</html>
